@@ -56,7 +56,10 @@ input {
     port => 5044
   }
 }
+# Edit config logstash
 vim /etc/logstash/conf.d/10-syslog-filter.conf
+
+```json
 filter {
   if [fileset][module] == "system" {
     if [fileset][name] == "auth" {
@@ -93,7 +96,12 @@ filter {
     }
   }
 }
+```
+
+# Edit config output
 vim /etc/logstash/conf.d/30-elasticsearch-output.conf
+
+```json
 output {
   elasticsearch {
     hosts => ["192.168.0.13:9200"]
@@ -101,4 +109,6 @@ output {
     index => "%{[@metadata][beat]}-%{[@metadata][version]}-%{+YYYY.MM.dd}"
   }
 }
+```
+
 sudo systemctl start logstash && sudo systemctl enable logstash
